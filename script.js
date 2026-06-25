@@ -177,6 +177,21 @@ function getImageGradient(id) {
   return images[id] || "linear-gradient(135deg, #0f5132, #d8f3dc)";
 }
 
+const sidePanel = document.getElementById("sidePanel");
+const closePanel = document.getElementById("closePanel");
+
+function closeSidePanel() {
+  sidePanel.classList.add("hidden");
+}
+
+closePanel.addEventListener("click", closeSidePanel);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeSidePanel();
+  }
+});
+
 function resetMap() {
   currentLayer = "main";
   mapWorld.style.transform = "translate(0, 0) scale(1)";
