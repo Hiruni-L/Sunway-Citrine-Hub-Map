@@ -151,11 +151,12 @@ function selectPoi(poi, layer) {
 }
 
 function showDetails(poi) {
+  sidePanel.classList.remove("hidden");
+
   detailsContent.innerHTML = `
     <p class="eyebrow">${poi.subtitle}</p>
     <h2>${poi.title}</h2>
     <p>${poi.body}</p>
-    <div class="info-image" style="background-image:${getImageGradient(poi.id)}"></div>
     <div class="pill-list">
       ${poi.highlights.map(item => `<div class="pill">✓ ${item}</div>`).join("")}
     </div>
@@ -182,19 +183,7 @@ function resetMap() {
   poiLayer.classList.remove("hidden");
   mallLayer.classList.add("hidden");
   backBtn.classList.add("hidden");
-
-  detailsContent.innerHTML = `
-    <p class="eyebrow">Interactive Map</p>
-    <h2>Click any icon on the map</h2>
-    <p>Select a point of interest to zoom in and view the activity, offering, and improvement idea.</p>
-    <ul>
-      <li>Shaded walkway between lake and hub</li>
-      <li>Directional signage around Emerald Lake</li>
-      <li>Picnic basket rental from Jaya Grocer</li>
-      <li>Food trucks, pop-up stalls, and night market</li>
-      <li>Citrine Hub interior improvements</li>
-    </ul>
-  `;
+  sidePanel.classList.add("hidden");
 }
 
 createTrees();
