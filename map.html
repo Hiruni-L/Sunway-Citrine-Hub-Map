@@ -19,43 +19,100 @@
     <section class="map-wrap">
       <div id="mapCanvas" class="map-canvas">
         <svg id="mapSvg" viewBox="0 0 1200 760" aria-label="Interactive Emerald Lake and Citrine Hub map">
-          <g id="mapWorld">
-            <rect width="1200" height="760" fill="#bfe86f"/>
+        <g id="mapWorld">
+        <defs>
+            <linearGradient id="grassGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d6ef7a"/>
+            <stop offset="45%" stop-color="#aeda55"/>
+            <stop offset="100%" stop-color="#7fbd43"/>
+            </linearGradient>
 
-            <path class="soft-hill" d="M0 80 C200 10 330 130 520 60 C760 -25 970 60 1200 20 L1200 760 L0 760 Z"/>
-            <path class="road" d="M0 675 C180 635 310 705 480 670 C685 625 835 710 1200 645 L1200 760 L0 760 Z"/>
+            <linearGradient id="lakeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#9ee9f1"/>
+            <stop offset="55%" stop-color="#5ec3d4"/>
+            <stop offset="100%" stop-color="#379bad"/>
+            </linearGradient>
 
-            <ellipse class="lake" cx="390" cy="245" rx="285" ry="145"/>
-            <ellipse class="lake-shade" cx="430" cy="240" rx="215" ry="100"/>
-            <text class="label lake-label" x="330" y="255">EMERALD LAKE</text>
+            <linearGradient id="roadGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8a918e"/>
+            <stop offset="100%" stop-color="#555d5b"/>
+            </linearGradient>
 
-            <path class="walkway" d="M150 330 C285 430 535 430 690 330 C775 275 840 280 920 355 C985 418 860 460 745 430 C650 405 590 475 500 525"/>
-            <path class="walkway" d="M675 345 C760 430 865 455 965 505"/>
+            <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000000" flood-opacity=".22"/>
+            </filter>
+        </defs>
 
-            <g class="hub">
-              <rect x="635" y="485" width="360" height="155" rx="12"/>
-              <rect x="675" y="445" width="270" height="70" rx="8"/>
-              <rect x="930" y="405" width="75" height="235" rx="6"/>
-              <rect x="665" y="545" width="300" height="35" fill="#e9f0ee"/>
-              <rect x="700" y="595" width="65" height="45" fill="#87c7d5"/>
-              <text class="label" x="710" y="470">CITRINE HUB</text>
-            </g>
+        <rect width="1200" height="760" fill="url(#grassGrad)"/>
 
-            <g class="parking">
-              <rect x="85" y="505" width="430" height="150" rx="18"/>
-              <line x1="120" y1="535" x2="470" y2="620"/>
-              <line x1="130" y1="575" x2="365" y2="635"/>
-              <text class="label" x="120" y="535">PARKING LOT</text>
-            </g>
+        <path fill="#c9e970" opacity=".55"
+            d="M0 120 C160 40 280 105 430 70 C620 25 780 100 920 65 C1030 35 1125 60 1200 30 L1200 760 L0 760 Z"/>
 
-            <g id="trees"></g>
+        <path fill="#95cc4b" opacity=".35"
+            d="M0 380 C180 330 275 405 445 360 C610 315 760 380 940 330 C1070 295 1140 320 1200 300 L1200 760 L0 760 Z"/>
 
-            <g id="poiLayer"></g>
-            <g id="mallLayer" class="hidden">
-              <rect x="610" y="365" width="430" height="275" rx="20" fill="rgba(255,255,255,.55)" stroke="#0f5132" stroke-width="4"/>
-              <text class="mall-title" x="690" y="405">CITRINE HUB INTERIOR</text>
-            </g>
-          </g>
+        <path class="road"
+            d="M0 665 C130 615 275 690 430 655 C590 620 690 655 820 675 C980 700 1080 645 1200 610 L1200 760 L0 760 Z"/>
+
+        <path fill="none" stroke="#f2f2f2" stroke-width="3" stroke-dasharray="30 26" opacity=".8"
+            d="M20 700 C170 655 285 720 445 682 C585 650 710 690 850 705 C995 722 1080 675 1190 645"/>
+
+        <ellipse cx="385" cy="252" rx="305" ry="158" fill="#4da6b4" opacity=".35"/>
+        <path class="lake"
+            d="M120 245 C125 155 245 110 382 118 C505 126 604 155 662 220 C723 290 642 375 500 392 C355 410 245 380 170 325 C130 295 112 270 120 245 Z"/>
+        <path fill="#9ee9f1" opacity=".45"
+            d="M185 230 C245 170 390 158 505 190 C570 208 600 238 610 270 C525 245 485 278 395 267 C305 256 255 225 185 230 Z"/>
+        <ellipse cx="425" cy="315" rx="16" ry="5" fill="#2d91a1" opacity=".28"/>
+        <ellipse cx="565" cy="250" rx="18" ry="6" fill="#2d91a1" opacity=".25"/>
+        <ellipse cx="335" cy="185" rx="22" ry="7" fill="#2d91a1" opacity=".18"/>
+
+        <path class="walkway"
+            d="M95 335 C190 405 325 440 475 422 C595 408 665 360 720 315 C790 258 865 280 928 350 C990 420 880 475 760 435 C655 400 595 465 500 528"/>
+        <path class="walkway"
+            d="M705 350 C782 430 870 458 970 510"/>
+        <path fill="none" stroke="#fff7cf" stroke-width="12" stroke-linecap="round" opacity=".75"
+            d="M95 335 C190 405 325 440 475 422 C595 408 665 360 720 315 C790 258 865 280 928 350 C990 420 880 475 760 435 C655 400 595 465 500 528"/>
+
+        <g class="parking">
+            <path d="M75 510 L520 495 L555 665 L90 675 Z" fill="#737b79"/>
+            <path d="M115 540 L495 525 M120 585 L510 568 M155 630 L485 615"
+            stroke="#ffffff" stroke-width="4" opacity=".75"/>
+            <path d="M170 515 L125 660 M245 508 L205 668 M325 505 L295 665 M405 502 L390 655"
+            stroke="#ffffff" stroke-width="3" opacity=".6"/>
+            <text class="label" x="115" y="535">PARKING LOT</text>
+        </g>
+
+        <g class="hub" filter="url(#softShadow)">
+            <polygon points="640,505 910,460 1015,520 745,575" fill="#b77744"/>
+            <polygon points="745,575 1015,520 1015,640 745,695" fill="#d8dedc"/>
+            <polygon points="640,505 745,575 745,695 640,620" fill="#eef2f0"/>
+            <polygon points="675,470 905,435 965,468 735,505" fill="#c49766"/>
+            <polygon points="735,505 965,468 965,522 735,560" fill="#e7ecea"/>
+            <polygon points="675,470 735,505 735,560 675,525" fill="#f6f8f7"/>
+
+            <rect x="778" y="535" width="62" height="38" fill="#8fd3df"/>
+            <rect x="858" y="518" width="84" height="14" fill="#ffffff" opacity=".85"/>
+            <rect x="765" y="595" width="230" height="13" fill="#ffffff" opacity=".75"/>
+            <rect x="765" y="625" width="230" height="13" fill="#ffffff" opacity=".65"/>
+
+            <polygon points="930,395 1005,430 1005,640 930,610" fill="#cfd5d3"/>
+            <polygon points="1005,430 1045,410 1045,620 1005,640" fill="#aeb6b4"/>
+            <polygon points="930,395 970,375 1045,410 1005,430" fill="#eef2f0"/>
+            <rect x="950" y="430" width="18" height="165" fill="#9a6138"/>
+            <text class="label" x="710" y="470">CITRINE HUB</text>
+        </g>
+
+        <text class="label lake-label" x="305" y="255">EMERALD LAKE</text>
+
+        <g id="trees"></g>
+        <g id="poiLayer"></g>
+
+        <g id="mallLayer" class="hidden">
+            <rect x="610" y="365" width="430" height="275" rx="20"
+            fill="rgba(255,255,255,.55)" stroke="#0f5132" stroke-width="4"/>
+            <text class="mall-title" x="690" y="405">CITRINE HUB INTERIOR</text>
+        </g>
+        </g>
         </svg>
       </div>
 

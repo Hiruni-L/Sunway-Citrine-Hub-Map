@@ -8,6 +8,22 @@ const trees = document.getElementById("trees");
 
 let currentLayer = "main";
 
+const mapCanvas = document.getElementById("mapCanvas");
+
+let view = {
+  x: 0,
+  y: 0,
+  scale: 1
+};
+
+let drag = {
+  active: false,
+  startX: 0,
+  startY: 0,
+  originX: 0,
+  originY: 0
+};
+
 const pois = [
   {
     id: "walkway",
@@ -15,7 +31,7 @@ const pois = [
     color: "#157347",
     x: 800,
     y: 345,
-    zoom: "translate(-260px, -120px) scale(1.55)",
+    focus: { x: 800, y: 345, scale: 1.65 },
     title: "Shaded Walkway",
     subtitle: "Pathway between Emerald Lake and Citrine Hub",
     body: "A cool, shaded pedestrian route connects Emerald Lake to Citrine Hub. Trees and covered walking areas make the journey comfortable during the day.",
@@ -27,7 +43,7 @@ const pois = [
     color: "#235aa8",
     x: 160,
     y: 330,
-    zoom: "translate(90px, -90px) scale(1.55)",
+    focus: { x: 160, y: 330, scale: 1.65 },
     title: "Directional Signage Posts",
     subtitle: "Wayfinding around Emerald Lake",
     body: "Signage posts around the lake guide visitors toward Citrine Hub, helping them discover nearby food, shopping, and facilities.",
@@ -39,7 +55,7 @@ const pois = [
     color: "#b76b12",
     x: 465,
     y: 170,
-    zoom: "translate(-120px, 20px) scale(1.6)",
+    focus: { x: 465, y: 170, scale: 1.75 },
     title: "Picnic Spots",
     subtitle: "Lake picnic experience supported by Citrine Hub",
     body: "Visitors can enjoy picnic spots around Emerald Lake and rent or purchase picnic baskets from Jaya Grocer at Citrine Hub.",
@@ -51,7 +67,7 @@ const pois = [
     color: "#7b3fb1",
     x: 185,
     y: 600,
-    zoom: "translate(110px, -360px) scale(1.6)",
+    focus: { x: 185, y: 600, scale: 1.75 },
     title: "Food Trucks & Pop-Up Stalls",
     subtitle: "Parking lot activation",
     body: "The parking lot can host food trucks, pop-up stalls, and night market events to create evening activity and attract more visitors.",
@@ -63,7 +79,7 @@ const pois = [
     color: "#087f5b",
     x: 815,
     y: 520,
-    zoom: "translate(-380px, -285px) scale(1.85)",
+    focus: { x: 815, y: 520, scale: 1.9 },
     title: "Citrine Hub",
     subtitle: "Mall improvement layer",
     body: "Zoom into Citrine Hub to view the proposed interior improvements, including better lighting and redesigned storefronts.",
@@ -79,7 +95,7 @@ const mallPois = [
     color: "#e0a800",
     x: 735,
     y: 500,
-    zoom: "translate(-390px, -305px) scale(2.35)",
+    focus: { x: 735, y: 500, scale: 2.4 },
     title: "Improved Shop Lighting",
     subtitle: "Brighter, warmer, and more welcoming interiors",
     body: "Lighting inside the shops is upgraded to make products easier to see and create a more inviting shopping environment.",
@@ -91,8 +107,7 @@ const mallPois = [
     color: "#0d6efd",
     x: 895,
     y: 515,
-    zoom: "translate(-560px, -315px) scale(2.35)",
-    title: "Redesigned Storefronts",
+    focus: { x: 895, y: 515, scale: 2.4 },    title: "Redesigned Storefronts",
     subtitle: "Cleaner, more attractive retail identity",
     body: "Storefront designs are refreshed so shops look more modern, consistent, and visually attractive to visitors.",
     highlights: ["Modernized shop facade", "Clearer retail identity", "More attractive mall walkways", "Encourages browsing and discovery"]
@@ -139,7 +154,7 @@ function renderPois(items, layer) {
 }
 
 function selectPoi(poi, layer) {
-  mapWorld.style.transform = poi.zoom;
+  zoomTo(poi.focus.x, poi.focus.y, poi.focus.scale);
   showDetails(poi);
 
   if (poi.entersMall) {
@@ -182,6 +197,12 @@ const closePanel = document.getElementById("closePanel");
 
 function closeSidePanel() {
   sidePanel.classList.add("hidden");
+  currentLayer = "main";
+  resetView();
+
+  poiLayer.classList.remove("hidden");
+  mallLayer.classList.add("hidden");
+  backBtn.classList.add("hidden");
 }
 
 closePanel.addEventListener("click", closeSidePanel);
@@ -192,13 +213,44 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+function applyView(animate = true) {
+  mapWorld.style.transition = animate ? "transform .55s ease" : "none";
+  mapWorld.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.scale})`;
+}
+
+function zoomTo(x, y, scale) {
+  const canvasRect = mapCanvas.getBoundingClientRect();
+  const centerX = canvasRect.width / 2;
+  const centerY = canvasRect.height / 2;
+
+  view.scale = scale;
+  view.x = centerX - x * scale;
+  view.y = centerY - y * scale;
+
+  applyView(true);
+}
+
+function resetView() {
+  view = {
+    x: 0,
+    y: 0,
+    scale: 1
+  };
+
+  applyView(true);
+}
+
 function resetMap() {
   currentLayer = "main";
-  mapWorld.style.transform = "translate(0, 0) scale(1)";
+  resetView();
+
   poiLayer.classList.remove("hidden");
   mallLayer.classList.add("hidden");
   backBtn.classList.add("hidden");
-  sidePanel.classList.add("hidden");
+
+  if (sidePanel) {
+    sidePanel.classList.add("hidden");
+  }
 }
 
 createTrees();
@@ -207,3 +259,36 @@ renderPois(mallPois, "mall");
 
 resetBtn.addEventListener("click", resetMap);
 backBtn.addEventListener("click", resetMap);
+
+mapCanvas.addEventListener("pointerdown", (event) => {
+  if (event.target.closest(".poi")) return;
+
+  drag.active = true;
+  drag.startX = event.clientX;
+  drag.startY = event.clientY;
+  drag.originX = view.x;
+  drag.originY = view.y;
+
+  mapCanvas.classList.add("is-dragging");
+  mapCanvas.setPointerCapture(event.pointerId);
+});
+
+mapCanvas.addEventListener("pointermove", (event) => {
+  if (!drag.active) return;
+
+  view.x = drag.originX + event.clientX - drag.startX;
+  view.y = drag.originY + event.clientY - drag.startY;
+
+  applyView(false);
+});
+
+mapCanvas.addEventListener("pointerup", (event) => {
+  drag.active = false;
+  mapCanvas.classList.remove("is-dragging");
+  mapCanvas.releasePointerCapture(event.pointerId);
+});
+
+mapCanvas.addEventListener("pointercancel", () => {
+  drag.active = false;
+  mapCanvas.classList.remove("is-dragging");
+});

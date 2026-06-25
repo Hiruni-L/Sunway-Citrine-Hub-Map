@@ -2,7 +2,11 @@
   box-sizing: border-box;
 }
 
+html,
 body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background: #eaf6d2;
@@ -10,8 +14,8 @@ body {
 }
 
 .topbar {
-  height: 92px;
-  padding: 18px 30px;
+  height: 72px;
+  padding: 10px 24px;
   background: linear-gradient(90deg, #083d2b, #0f5b3b);
   color: white;
   display: flex;
@@ -21,11 +25,12 @@ body {
 
 .topbar h1 {
   margin: 0;
-  font-size: 30px;
+  font-size: clamp(20px, 2vw, 28px);
 }
 
 .topbar p {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
+  font-size: 14px;
   opacity: .85;
 }
 
@@ -45,22 +50,33 @@ button {
 }
 
 .app {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr 360px;
-  min-height: calc(100vh - 92px);
+  grid-template-columns: 1fr;
+  height: calc(100vh - 72px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .map-wrap {
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
 }
 
 .map-canvas {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
   background: #bfe86f;
   position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+
+.map-canvas.is-dragging {
+  cursor: grabbing;
 }
 
 svg {
@@ -70,9 +86,15 @@ svg {
 }
 
 #mapWorld {
-  transform-origin: center;
-  transition: transform .7s ease;
+  transform-origin: 0 0;
+  transition: transform .55s ease;
+  will-change: transform;
 }
+
+.map-canvas.is-dragging #mapWorld {
+  transition: none;
+}
+
 
 .soft-hill {
   fill: #a9d85c;
@@ -80,12 +102,12 @@ svg {
 }
 
 .road {
-  fill: #686f6d;
+  fill: url(#roadGrad);
 }
 
 .lake {
-  fill: #68c7d6;
-  stroke: #3aa5b6;
+  fill: url(#lakeGrad);
+  stroke: #2d91a1;
   stroke-width: 8;
 }
 
@@ -96,8 +118,8 @@ svg {
 
 .walkway {
   fill: none;
-  stroke: #f5e7a8;
-  stroke-width: 32;
+  stroke: #eadf9b;
+  stroke-width: 34;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -114,10 +136,9 @@ svg {
   stroke-width: 5;
 }
 
-.hub rect:nth-child(3) {
-  fill: #c9cfcd;
-  stroke: #f7f7f7;
-  stroke-width: 5;
+.hub {
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .parking rect {
@@ -162,15 +183,16 @@ svg {
   cursor: pointer;
 }
 
-.poi circle {
+.poi .marker-bg {
   stroke: white;
   stroke-width: 6;
-  filter: drop-shadow(0 8px 8px rgba(0,0,0,.25));
-  transition: transform .2s ease;
+  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .28));
+  transition: transform .2s ease, filter .2s ease;
 }
 
-.poi:hover circle {
-  transform: scale(1.08);
+.poi:hover .marker-bg {
+  transform: scale(1.12);
+  filter: drop-shadow(0 14px 16px rgba(0, 0, 0, .32));
 }
 
 .poi text {
@@ -182,14 +204,16 @@ svg {
 }
 
 .legend {
-  min-height: 72px;
+  height: 56px;
+  min-height: 56px;
   background: #083d2b;
   color: white;
   display: flex;
-  gap: 22px;
+  gap: 18px;
   align-items: center;
-  padding: 12px 24px;
-  flex-wrap: wrap;
+  padding: 8px 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .legend span {
@@ -273,23 +297,42 @@ svg {
 }
 
 @media (max-width: 900px) {
-  .app {
-    grid-template-columns: 1fr;
-  }
-
-  .map-canvas {
-    height: 62vh;
-  }
-
-  .details {
-    min-height: 38vh;
-  }
-
   .topbar {
-    height: auto;
-    gap: 16px;
-    align-items: flex-start;
-    flex-direction: column;
+    height: 84px;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .topbar h1 {
+    font-size: 20px;
+  }
+
+  .topbar p {
+    font-size: 12px;
+  }
+
+  .app {
+    height: calc(100vh - 84px);
+  }
+
+  .legend {
+    height: 52px;
+    min-height: 52px;
+    gap: 14px;
+    padding: 8px 12px;
+  }
+
+  .legend span {
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .side-panel {
+    top: auto;
+    right: 12px;
+    bottom: 64px;
+    width: calc(100vw - 24px);
+    max-height: 42vh;
   }
 }
 
@@ -348,16 +391,9 @@ svg {
   line-height: 1.55;
 }
 
-@media (max-width: 900px) {
-  .side-panel {
-    top: auto;
-    right: 12px;
-    bottom: 12px;
-    width: calc(100vw - 24px);
-    max-height: 45vh;
+.legend {
+    min-height: 64px;
+    gap: 14px;
+    flex-wrap: nowrap;
   }
 
-  .side-panel.hidden {
-    transform: translateY(120%);
-  }
-}
