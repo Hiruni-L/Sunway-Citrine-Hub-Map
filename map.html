@@ -8,15 +8,29 @@
 </head>
 <body>
   <header class="topbar">
-    <div>
+    <div class="brand-copy">
+      <span class="section-kicker">Interactive Directory</span>
       <h1>Emerald Lake & Citrine Hub</h1>
-      <p>Explore activities, visitor flow, and mall improvements</p>
+      <p>Discover lakeside activities, wayfinding ideas, and Citrine Hub improvements.</p>
     </div>
-    <button id="resetBtn">⌂ Reset Map</button>
+    <button id="resetBtn">Reset Map</button>
   </header>
 
   <main class="app">
     <section class="map-wrap">
+      <div class="map-toolbar" aria-label="Map filters">
+        <div>
+          <span class="section-kicker">Explore by Category</span>
+          <h2>Plan the visitor journey</h2>
+        </div>
+        <div class="filter-group" role="group" aria-label="Point of interest filters">
+          <button class="filter-chip active" type="button" data-filter="all">All</button>
+          <button class="filter-chip" type="button" data-filter="access">Access</button>
+          <button class="filter-chip" type="button" data-filter="leisure">Leisure</button>
+          <button class="filter-chip" type="button" data-filter="food">Food</button>
+          <button class="filter-chip" type="button" data-filter="retail">Retail</button>
+        </div>
+      </div>
       <div id="mapCanvas" class="map-canvas">
         <svg id="mapSvg" viewBox="0 0 1200 760" aria-label="Interactive Emerald Lake and Citrine Hub map">
         <g id="mapWorld">
@@ -118,9 +132,9 @@
 
       <nav class="legend">
         <span><b class="dot walk"></b> Walkway</span>
-        <span><b class="dot sign"></b> Signage</span>
+        <span><b class="dot sign"></b> Wayfinding</span>
         <span><b class="dot picnic"></b> Picnic</span>
-        <span><b class="dot truck"></b> Food Trucks</span>
+        <span><b class="dot truck"></b> Food Pop-Ups</span>
         <span><b class="dot hub-dot"></b> Citrine Hub</span>
       </nav>
     </section>

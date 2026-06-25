@@ -5,6 +5,7 @@ const detailsContent = document.getElementById("detailsContent");
 const resetBtn = document.getElementById("resetBtn");
 const backBtn = document.getElementById("backBtn");
 const trees = document.getElementById("trees");
+const filterChips = document.querySelectorAll(".filter-chip");
 
 let currentLayer = "main";
 
@@ -27,6 +28,8 @@ let drag = {
 const pois = [
   {
     id: "walkway",
+    marker: "W",
+    category: "access",
     icon: "🚶",
     color: "#157347",
     x: 800,
@@ -39,6 +42,8 @@ const pois = [
   },
   {
     id: "signage",
+    marker: "S",
+    category: "access",
     icon: "➜",
     color: "#235aa8",
     x: 160,
@@ -51,6 +56,8 @@ const pois = [
   },
   {
     id: "picnic",
+    marker: "P",
+    category: "leisure",
     icon: "🧺",
     color: "#b76b12",
     x: 465,
@@ -63,6 +70,8 @@ const pois = [
   },
   {
     id: "foodtruck",
+    marker: "F",
+    category: "food",
     icon: "🚚",
     color: "#7b3fb1",
     x: 185,
@@ -75,6 +84,8 @@ const pois = [
   },
   {
     id: "hub",
+    marker: "H",
+    category: "retail",
     icon: "🏢",
     color: "#087f5b",
     x: 815,
@@ -91,6 +102,8 @@ const pois = [
 const mallPois = [
   {
     id: "lighting",
+    marker: "L",
+    category: "retail",
     icon: "💡",
     color: "#e0a800",
     x: 735,
@@ -103,6 +116,8 @@ const mallPois = [
   },
   {
     id: "storefront",
+    marker: "R",
+    category: "retail",
     icon: "🏬",
     color: "#0d6efd",
     x: 895,
@@ -143,10 +158,11 @@ function renderPois(items, layer) {
     group.classList.add("poi");
     group.dataset.id = poi.id;
     group.dataset.layer = layer;
+    group.dataset.category = poi.category;
     group.setAttribute("transform", `translate(${poi.x}, ${poi.y})`);
     group.innerHTML = `
       <circle r="36" fill="${poi.color}"></circle>
-      <text y="2">${poi.icon}</text>
+      <text y="2">${poi.marker}</text>
     `;
     group.addEventListener("click", () => selectPoi(poi, layer));
     target.appendChild(group);
@@ -173,9 +189,24 @@ function showDetails(poi) {
     <h2>${poi.title}</h2>
     <p>${poi.body}</p>
     <div class="pill-list">
-      ${poi.highlights.map(item => `<div class="pill">✓ ${item}</div>`).join("")}
+      ${poi.highlights.map(item => `<div class="pill">${item}</div>`).join("")}
     </div>
   `;
+}
+
+function filterPois(category) {
+  document.querySelectorAll(".poi").forEach((marker) => {
+    const isVisible = category === "all" || marker.dataset.category === category;
+    marker.classList.toggle("is-filtered", !isVisible);
+  });
+}
+
+function resetFilters() {
+  filterChips.forEach((chip) => {
+    chip.classList.toggle("active", chip.dataset.filter === "all");
+  });
+
+  filterPois("all");
 }
 
 function getImageGradient(id) {
@@ -243,6 +274,7 @@ function resetView() {
 function resetMap() {
   currentLayer = "main";
   resetView();
+  resetFilters();
 
   poiLayer.classList.remove("hidden");
   mallLayer.classList.add("hidden");
@@ -259,6 +291,14 @@ renderPois(mallPois, "mall");
 
 resetBtn.addEventListener("click", resetMap);
 backBtn.addEventListener("click", resetMap);
+
+filterChips.forEach((chip) => {
+  chip.addEventListener("click", () => {
+    filterChips.forEach((item) => item.classList.remove("active"));
+    chip.classList.add("active");
+    filterPois(chip.dataset.filter);
+  });
+});
 
 mapCanvas.addEventListener("pointerdown", (event) => {
   if (event.target.closest(".poi")) return;
