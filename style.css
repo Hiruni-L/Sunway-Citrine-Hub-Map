@@ -1,0 +1,294 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #eaf6d2;
+  color: #123629;
+}
+
+.topbar {
+  height: 92px;
+  padding: 18px 30px;
+  background: linear-gradient(90deg, #083d2b, #0f5b3b);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.topbar p {
+  margin: 4px 0 0;
+  opacity: .85;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+#resetBtn,
+.back {
+  background: white;
+  color: #123629;
+  padding: 13px 18px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  min-height: calc(100vh - 92px);
+}
+
+.map-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.map-canvas {
+  flex: 1;
+  overflow: hidden;
+  background: #bfe86f;
+  position: relative;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#mapWorld {
+  transform-origin: center;
+  transition: transform .7s ease;
+}
+
+.soft-hill {
+  fill: #a9d85c;
+  opacity: .7;
+}
+
+.road {
+  fill: #686f6d;
+}
+
+.lake {
+  fill: #68c7d6;
+  stroke: #3aa5b6;
+  stroke-width: 8;
+}
+
+.lake-shade {
+  fill: #8edce5;
+  opacity: .55;
+}
+
+.walkway {
+  fill: none;
+  stroke: #f5e7a8;
+  stroke-width: 32;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hub rect:first-child {
+  fill: #d9dedb;
+  stroke: #f7f7f7;
+  stroke-width: 5;
+}
+
+.hub rect:nth-child(2) {
+  fill: #b98a58;
+  stroke: #f7f7f7;
+  stroke-width: 5;
+}
+
+.hub rect:nth-child(3) {
+  fill: #c9cfcd;
+  stroke: #f7f7f7;
+  stroke-width: 5;
+}
+
+.parking rect {
+  fill: #727b79;
+}
+
+.parking line {
+  stroke: white;
+  stroke-width: 4;
+  opacity: .8;
+}
+
+.label {
+  fill: white;
+  font-size: 24px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: #0b3c2b;
+  stroke-width: 8;
+  stroke-linejoin: round;
+}
+
+.lake-label {
+  font-size: 25px;
+}
+
+.mall-title {
+  fill: #0b3c2b;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.tree .trunk {
+  fill: #80562c;
+}
+
+.tree .leaf {
+  fill: #3e7d2a;
+}
+
+.poi {
+  cursor: pointer;
+}
+
+.poi circle {
+  stroke: white;
+  stroke-width: 6;
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,.25));
+  transition: transform .2s ease;
+}
+
+.poi:hover circle {
+  transform: scale(1.08);
+}
+
+.poi text {
+  fill: white;
+  font-size: 34px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.legend {
+  min-height: 72px;
+  background: #083d2b;
+  color: white;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  padding: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.walk { background: #157347; }
+.sign { background: #235aa8; }
+.picnic { background: #b76b12; }
+.truck { background: #7b3fb1; }
+.hub-dot { background: #087f5b; }
+
+.details {
+  background: #fbfffb;
+  padding: 28px;
+  box-shadow: -8px 0 30px rgba(0,0,0,.12);
+  overflow-y: auto;
+}
+
+.eyebrow {
+  color: #0f7a4b;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: .08em;
+}
+
+.details h2 {
+  margin: 8px 0 12px;
+  font-size: 30px;
+  color: #0b3c2b;
+}
+
+.details p {
+  line-height: 1.55;
+  font-size: 16px;
+}
+
+.details ul {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.info-image {
+  height: 160px;
+  border-radius: 8px;
+  margin: 18px 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.pill-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.pill {
+  background: #e7f4ec;
+  color: #0b5134;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none;
+}
+
+.back {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .map-canvas {
+    height: 62vh;
+  }
+
+  .details {
+    min-height: 38vh;
+  }
+
+  .topbar {
+    height: auto;
+    gap: 16px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
