@@ -276,7 +276,7 @@ button {
 
 }
 
-.legend {
+/* .legend {
   min-height: 54px;
   background: rgba(7, 59, 45, .96);
   color: #fffaf0;
@@ -287,15 +287,15 @@ button {
   flex-wrap: nowrap;
   overflow-x: auto;
   border-radius: 8px;
-}
+} */
 
-.legend span {
+/* .legend span {
   display: flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
   font-size: 14px;
-}
+} */
 
 .dot {
   width: 14px;
