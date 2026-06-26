@@ -145,16 +145,38 @@ button {
   cursor: grabbing;
 }
 
-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+#mapWorld{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;        /* required: gives #mapImage and #poiLayer a reference width */
+
+    transform-origin:top left;
+
+    transition:transform .55s ease;
+
+    will-change:transform;
 }
 
-#mapWorld {
-  transform-origin: 0 0;
-  transition: transform .55s ease;
-  will-change: transform;
+#mapImage{
+
+    display:block;
+
+    width:100%;
+
+    user-select:none;
+
+    pointer-events:none;
+
+}
+
+#poiLayer,
+#mallLayer{
+
+    position:absolute;
+
+    inset:0;
+
 }
 
 .map-canvas.is-dragging #mapWorld {
@@ -195,35 +217,63 @@ svg {
 .tree .trunk { fill: #80562c; }
 .tree .leaf  { fill: #3e7d2a; }
 
-.poi {
-  cursor: pointer;
-  transition: opacity .2s ease;
-}
-
 .poi.is-filtered {
   opacity: .18;
   pointer-events: none;
 }
 
-.poi circle {
-  stroke: white;
-  stroke-width: 6;
-  filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .28));
-  transition: transform .2s ease, filter .2s ease;
+.poi{
+
+    position:absolute;
+
+    width:44px;
+
+    height:44px;
+
+    border-radius:50%;
+
+    background:#157347;
+
+    color:white;
+
+    border:4px solid white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+
+    transition:.2s;
+
 }
 
-.poi:hover circle {
-  transform: scale(1.12);
-  filter: drop-shadow(0 14px 16px rgba(0, 0, 0, .32));
+.poi:hover{
+
+    transform:translate(-50%,-50%) scale(1.12);
+
 }
 
-.poi text {
-  fill: white;
-  font-size: 26px;
-  font-weight: 900;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  pointer-events: none;
+.poi span{
+
+    font-size:20px;
+
+}
+
+#poiLayer{
+
+    position:absolute;
+
+    inset:0;
+
 }
 
 .legend {
