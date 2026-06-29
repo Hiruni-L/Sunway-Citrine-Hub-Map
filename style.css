@@ -132,7 +132,7 @@ button {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  background: #cce67b;
+  background: #7ab83e;
   position: relative;
   cursor: grab;
   touch-action: none;
@@ -167,6 +167,10 @@ button {
     user-select:none;
 
     pointer-events:none;
+
+    height: 100%;
+
+    object-fit: contain;
 
 }
 
